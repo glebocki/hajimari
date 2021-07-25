@@ -27,7 +27,7 @@ def main():
     loss, acc = model.evaluate(test_images, test_labels, verbose=2)
     print("Restored model, accuracy: {:5.2f}%".format(100 * acc))
 
-    print("Predicted shape: ", model.predict(test_images).shape)
+    print(model.predict(test_images).shape)
     # print(model.predict(test_images))
 
 class_names = ["0", "1", "2", "3", "4",
