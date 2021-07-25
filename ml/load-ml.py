@@ -30,18 +30,40 @@ def main():
     print(model.predict(test_images).shape)
     # print(model.predict(test_images))
 
-class_names = ["0", "1", "2", "3", "4",
-               "5", "6", "7", "8", "9"]
+    x_test = test_images
+    x_imgs_to_be_predicted = x_test[:3]
+    y_pred = model.predict(x_imgs_to_be_predicted)
 
-X_test = test_images
-X_imgsToBePredicted = X_test[:3]
-y_pred = model.predict(X_imgsToBePredicted)
-# Printing the predicted labels
-print(y_pred)
-print("###")
-print(y_pred[0])
-for i in range(3):
-    print(class_names[np.argmax(y_pred[i])])
+    print_predicted_labels(y_pred)
+
+
+def print_predicted_labels(predictions):
+    """
+    Printing the predicted labels
+    """
+    print("Predictions: ", predictions)
+    print("###")
+    print("Prediction 0: ", predictions[0])
+    # print(predictions[1])
+
+    class_names = ["0", "1", "2", "3", "4",
+                   "5", "6", "7", "8", "9"]
+    print("=============")
+    print_prediction_statistics(class_names, predictions)
+
+    print("\nHuman readable predictions")
+    for i in range(3):
+        print(class_names[np.argmax(predictions[i])], " ", end='')
+
+
+def print_prediction_statistics(class_names, predictions):
+    for i in range(10):
+        print(" ", class_names[i], "        ", end='')
+    print()
+    for p in range(3):
+        for i in range(10):
+            print(predictions[p][i], " ", end='')
+        print()
 
 
 if __name__ == '__main__':
