@@ -35,5 +35,5 @@ def plot_multiple_samples(rows: int, columns: int):
     plt.show()
 
 
-plot_single_sample()
-plot_multiple_samples(10, 10)
+if __name__ == '__main__':
+    plot_multiple_samples(5, 10)
