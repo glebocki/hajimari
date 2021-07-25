@@ -7,6 +7,8 @@ from pydantic import BaseModel
 import tensorflow as tf
 from tensorflow import keras
 
+import numpy as np
+
 app = FastAPI()
 
 
@@ -35,13 +37,31 @@ def ml_upload_img(number_image: UploadFile = File(...)):
 
     # Reside the image - what is the input format here?
     # train_images = train_images[:1000].reshape(-1, 28 * 28) / 255.0
+    # print(test_images[:1000])
     test_images = test_images[:1000].reshape(-1, 28 * 28) / 255.0
 
     input_samples = test_images
+    print(input_samples)
 
-    predictions = model.predict(input_samples).shape
+    print(model.predict(input_samples))
 
-    return predictions
+    predictions = model.predict(input_samples)
+
+    answers = human_readable_answers(predictions)
+
+    return answers
 
 
-
+def human_readable_answers(predictions):
+    """
+    Turn predictions into Human readable answers
+    """
+    answers = []
+    class_names = ["0", "1", "2", "3", "4",
+                   "5", "6", "7", "8", "9"]
+    for i in range(1000):
+        argmax = np.argmax(predictions[i])
+        answer = class_names[argmax]
+        print(answer)
+        answers.append(answer)
+    return answers
