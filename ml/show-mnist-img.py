@@ -20,6 +20,7 @@ def plot_single_sample():
 
 def plot_multiple_samples(rows: int, columns: int):
     num = rows * columns
+    # [:num] from start to num
     images = X_train[:num]
     labels = Y_train[:num]
 
