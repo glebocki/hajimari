@@ -26,7 +26,7 @@ def ml_upload_img(number_image: UploadFile = File(...)):
 
     # TODO: Load once - Singleton, research Dependency Injection in FastApi
     # Loading model H5
-    model: tf.keras.Model = keras.models.load_model("my_model.h5")
+    model: tf.keras.Model = keras.models.load_model("mnist_model.h5")
 
     (train_images, train_labels), (test_images, test_labels) = tf.keras.datasets.mnist.load_data()
 

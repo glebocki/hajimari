@@ -117,9 +117,9 @@ print("Restored model, accuracy: {:5.2f}%".format(100 * acc))
 
 
 # Saving lodaing model H5
-model.save("my_model.h5")
+model.save("mnist_model.h5")
 
-model.load("my_model.h5")
+model.load("mnist_model.h5")
 
 # Re-evaluate the model
 loss, acc = model.evaluate(test_images, test_labels, verbose=2)

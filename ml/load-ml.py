@@ -10,7 +10,7 @@ import numpy as np
 
 # Lodaing model H5
 
-model: tf.keras.Model = keras.models.load_model("my_model.h5")
+model: tf.keras.Model = keras.models.load_model("mnist_model.h5")
 
 # Re-evaluate the model
 
