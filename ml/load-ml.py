@@ -20,6 +20,14 @@ def main():
     train_labels = train_labels[:1000]
     test_labels = test_labels[:1000]
 
+    test_image = test_images[:1]
+    print("test image", test_image)
+    print(type(test_image))
+
+    test_image_reshaped = test_image.reshape(-1, 28 * 28) / 255.0
+    print("test image reshaped", test_image_reshaped)
+    print(type(test_image_reshaped))
+
     train_images = train_images[:1000].reshape(-1, 28 * 28) / 255.0
     test_images = test_images[:1000].reshape(-1, 28 * 28) / 255.0
 
