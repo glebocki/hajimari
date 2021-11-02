@@ -1,36 +1,43 @@
-from typing import Optional, List
+from typing import List
 
-from fastapi import FastAPI, Response
-from pydantic import BaseModel
+from fastapi import FastAPI, Response, Request, Form
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 import os
 import zipfile
 import io
 
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+templates = Jinja2Templates(directory="templates")
 
 
-class Item(BaseModel):
-    name: str
-    price: float
-    is_offer: Optional[bool] = None
+@app.get("/", response_class=HTMLResponse)
+def index(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
+@app.post("/generate")
+def generate(service_name=Form(...)) -> Response:
+    return zip_files(["README.md"], slugify(service_name))
 
 
-def zipfiles(filenames: List[str]):
-    zip_filename = "archive.zip"
+def slugify(value: str):
+    # TODO: normalize filename
+    return value
 
+
+def zip_files(filenames: List[str], zip_filename: str = "archive") -> Response:
+    # zip_filename = "archive.zip"
     s = io.BytesIO()
     zf = zipfile.ZipFile(s, "w")
 
     for filePath in filenames:
         # Calculate path for file in zip
         fdir, filename = os.path.split(filePath)
-
         # Add file, at correct path
         zf.write(filePath, filename)
 
@@ -39,12 +46,7 @@ def zipfiles(filenames: List[str]):
 
     # Grab ZIP file from in-memory, make response with correct MIME-type
     resp = Response(s.getvalue(), media_type="application/x-zip-compressed", headers={
-        'Content-Disposition': f'attachment;filename={zip_filename}'
+        'Content-Disposition': f'attachment;filename={zip_filename + ".zip"}'
     })
 
     return resp
-
-
-@app.get("/image_from_id/")
-async def image_from_id(image_id: int):
-    return zipfiles(["README.md"])

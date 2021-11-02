@@ -1,0 +1,33 @@
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <title>Hajimari</title>
+
+    <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <h1>Hajimari - Machine Learning Service Generator</h1>
+    <div class="form">
+        <form action="./generate" method="post">
+        <label for="service_name">Service Name:</label>
+        <input type="text" id="service_name" name="service_name">
+        <br>
+        <label for="model_type">Model type:</label>
+        <select name="model_type" id="model_type">
+            <option value="picture">image</option>
+        </select>
+        <br>
+        <label for="ml_model">ML model (.h5):</label>
+        <input type="file" id="ml_model" name="ml_model">
+        <br>
+        <br>
+        <input type="submit" value="Generate">
+    </form>
+    </div>
+</div>
+</body>
+</html>
