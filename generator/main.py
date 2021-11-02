@@ -36,7 +36,6 @@ def slugify(value: str):
 
 
 def zip_files(file_names: List[str], zip_filename: str = "archive") -> Response:
-    # zip_filename = "archive.zip"
     s = io.BytesIO()
     zf = zipfile.ZipFile(s, "w")
 
