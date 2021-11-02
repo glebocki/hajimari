@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import FastAPI, Response, Request, Form
+from fastapi import FastAPI, Response, Request, File, Form, UploadFile
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -21,7 +21,12 @@ def index(request: Request):
 
 
 @app.post("/generate")
-def generate(service_name=Form(...)) -> Response:
+async def generate(service_name: str = Form(...),
+                   model_type: str = Form(...),
+                   ml_model: UploadFile = File(...)) -> Response:
+    print("Service Name: " + service_name)
+    print("Model Type: " + model_type)
+    print("Model file: " + ml_model.filename)
     return zip_files(["README.md"], slugify(service_name))
 
 
@@ -30,16 +35,16 @@ def slugify(value: str):
     return value
 
 
-def zip_files(filenames: List[str], zip_filename: str = "archive") -> Response:
+def zip_files(file_names: List[str], zip_filename: str = "archive") -> Response:
     # zip_filename = "archive.zip"
     s = io.BytesIO()
     zf = zipfile.ZipFile(s, "w")
 
-    for filePath in filenames:
+    for file_path in file_names:
         # Calculate path for file in zip
-        fdir, filename = os.path.split(filePath)
+        file_dir, filename = os.path.split(file_path)
         # Add file, at correct path
-        zf.write(filePath, filename)
+        zf.write(file_path, filename)
 
     # Must close zip for all contents to be written
     zf.close()
