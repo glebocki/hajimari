@@ -50,7 +50,7 @@ class MicroServiceGenerator:
             "codeblocks/README.md",
             "codeblocks/requirements.txt",
             "codeblocks/main.py",
-            f"codeblocks/{model_file.filename}"
+            model_file_path
         ], slugify(service_name))
 
         # clean up
