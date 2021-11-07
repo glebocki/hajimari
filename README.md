@@ -27,6 +27,8 @@ pytest
 
 ## Generated package contents
 
+Service generates a `.zip` package with a microservice capable of running provided model.
+
 ```text
 example_ml_service
 ├── README.md
