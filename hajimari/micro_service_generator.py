@@ -38,4 +38,4 @@ class MicroServiceGenerator:
                  model_type: str,
                  # ml_model: UploadFile
                  ):
-        return zip_files(["README.md"], slugify(service_name))
+        return zip_files(["run.sh"], slugify(service_name))

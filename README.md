@@ -5,3 +5,22 @@ _Everything have to start somewhere._
 ---
 
 Configurable environment for API deployment for machine learning models.
+
+## Run it:
+
+```shell
+pip install -r requirements.txt
+```
+
+``` shell
+cd hajimari
+uvicorn main:app --reload
+```
+
+Docs avaliable at [/docs](http://127.0.0.1:8000/docs)
+
+## Testing
+
+```shell
+pytest
+```
