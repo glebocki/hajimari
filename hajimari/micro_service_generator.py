@@ -45,6 +45,7 @@ class MicroServiceGenerator:
         with open(model_file_path, 'wb') as buffer:
             shutil.copyfileobj(model_file.file, buffer)
 
+        # package files
         res: Response = zip_files([
             "run.sh",
             "codeblocks/README.md",
