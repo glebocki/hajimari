@@ -5,7 +5,7 @@ from typing import List
 
 from fastapi import Response
 
-from generator.utils.text import slugify
+from utils import slugify
 
 
 def zip_files(file_names: List[str], zip_filename: str = "archive") -> Response:
@@ -29,7 +29,7 @@ def zip_files(file_names: List[str], zip_filename: str = "archive") -> Response:
     return resp
 
 
-class Generator:
+class MicroServiceGenerator:
 
     def __init__(self):
         return

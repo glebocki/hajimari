@@ -3,7 +3,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from services.generator import Generator
+from micro_service_generator import MicroServiceGenerator
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -20,4 +20,5 @@ def index(request: Request):
 async def generate(service_name: str = Form(...),
                    model_type: str = Form(...),
                    ml_model: UploadFile = File(...)) -> Response:
-    return Generator().generate(service_name, model_type)
+    # TODO: validate that file has extension .h5
+    return MicroServiceGenerator().generate(service_name, model_type)

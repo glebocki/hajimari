@@ -1,9 +1,9 @@
 import unittest
 
-from text import slugify
+from generator.utils import slugify
 
 
-class TestText(unittest.TestCase):
+class TestUtils(unittest.TestCase):
 
     def test_slugify(self):
         result = slugify("Example name with spaces")
@@ -12,6 +12,7 @@ class TestText(unittest.TestCase):
     def test_slugify2(self):
         result = slugify("example_ml_service")
         self.assertEqual("example_ml_service", result)
+
 
 if __name__ == '__main__':
     unittest.main()
