@@ -1,6 +1,6 @@
 import unittest
 
-from generator.utils import slugify
+from hajimari.utils import slugify
 
 
 class TestUtils(unittest.TestCase):
