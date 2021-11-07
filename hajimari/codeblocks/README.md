@@ -1,0 +1,1 @@
+# Example READEME for generated micro service

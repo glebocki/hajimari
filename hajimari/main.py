@@ -21,4 +21,4 @@ async def generate(service_name: str = Form(...),
                    model_type: str = Form(...),
                    ml_model: UploadFile = File(...)) -> Response:
     # TODO: validate that file has extension .h5
-    return MicroServiceGenerator().generate(service_name, model_type)
+    return MicroServiceGenerator().generate(service_name, model_type, ml_model)

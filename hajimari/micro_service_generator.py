@@ -1,9 +1,10 @@
 import io
 import os
 import zipfile
+import shutil
 from typing import List
 
-from fastapi import Response
+from fastapi import Response, UploadFile
 
 from utils import slugify
 
@@ -36,6 +37,23 @@ class MicroServiceGenerator:
 
     def generate(self, service_name: str,
                  model_type: str,
-                 # ml_model: UploadFile
+                 model_file: UploadFile
                  ):
-        return zip_files(["run.sh"], slugify(service_name))
+        model_file_path: str = f'codeblocks/{model_file.filename}'
+
+        # save file locally
+        with open(model_file_path, 'wb') as buffer:
+            shutil.copyfileobj(model_file.file, buffer)
+
+        res: Response = zip_files([
+            "run.sh",
+            "codeblocks/README.md",
+            "codeblocks/requirements.txt",
+            "codeblocks/main.py",
+            f"codeblocks/{model_file.filename}"
+        ], slugify(service_name))
+
+        # clean up
+        os.remove(model_file_path)
+    
+        return res
