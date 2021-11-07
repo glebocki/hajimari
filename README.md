@@ -24,3 +24,14 @@ Docs avaliable at [/docs](http://127.0.0.1:8000/docs)
 ```shell
 pytest
 ```
+
+## Generated package contents
+
+```text
+example_ml_service
+├── README.md
+├── main.py
+├── model.h5
+├── requirements.txt
+└── run.sh
+```
