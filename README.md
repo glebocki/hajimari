@@ -8,9 +8,22 @@ Configurable environment for API deployment for machine learning models.
 
 ## Run it:
 
+### Running in pipenv
+
+First install `pipenv`.
+
+```shell
+pipenv install -r requirements.txt
+pipenv shell
+```
+
+### Installing dependencies globally
+
 ```shell
 pip install -r requirements.txt
 ```
+
+### Starting App
 
 ``` shell
 cd hajimari
