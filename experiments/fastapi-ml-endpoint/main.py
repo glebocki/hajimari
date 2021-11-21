@@ -1,8 +1,10 @@
-from typing import Optional
+from typing import Optional, List
 
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import Response
 from pydantic import BaseModel
+import matplotlib.pyplot as plt
+from numpy import ndarray
 
 import tensorflow as tf
 from tensorflow import keras
@@ -22,8 +24,16 @@ class Predict(BaseModel):
     inputSamples: list[int]
 
 
+class_names = ["0", "1", "2", "3", "4",
+               "5", "6", "7", "8", "9"]
+
+
 @app.post("/api/ml/predict")
-def ml_upload_img(number_image: UploadFile = File(...)):
+def ml_upload_img(payload: List[List[float]]):
+    foo = np.array(payload)
+    print("foo")
+    print(foo)
+
     # input_samples = predict.inputSamples
 
     # TODO: Load once - Singleton, research Dependency Injection in FastApi
@@ -38,18 +48,38 @@ def ml_upload_img(number_image: UploadFile = File(...)):
     # Reside the image - what is the input format here?
     # train_images = train_images[:1000].reshape(-1, 28 * 28) / 255.0
     # print(test_images[:1000])
-    test_images = test_images[:1000].reshape(-1, 28 * 28) / 255.0
+    test_images = test_images[:1]
+    reshape = test_images.reshape(-1, 28 * 28)
+    print("reshape")
+    print(reshape)
+
+    """
+RGB (Red, Green, Blue) are 8 bit each.
+The range for each individual colour is 0-255 (as 2^8 = 256 possibilities).
+The combination range is 256*256*256.
+
+By dividing by 255, the 0-255 range can be described with a 0.0-1.0 range where 0.0 means 0 (0x00) and 1.0 means 255 (0xFF).
+    """
+    test_images = reshape / 255.0  # divides all elements
+    print(test_images)
 
     input_samples = test_images
-    print(input_samples)
 
-    print(model.predict(input_samples))
+    # PREDICT
+    predictions: ndarray = model.predict(foo)
+    # predictions: ndarray = model.predict(input_samples)
 
-    predictions = model.predict(input_samples)
+    predictions_list: list = predictions.tolist()
+    print(type(predictions_list))
+    print(predictions_list)
+    return {
+        "classNames": class_names,
+        "humanReadable": human_readable_answers(predictions_list),
+        "predictions": predictions_list
+    }
 
-    answers = human_readable_answers(predictions)
-
-    return answers
+    # answers = human_readable_answers(predictions)
+    # return answers
 
 
 def human_readable_answers(predictions):
@@ -57,9 +87,8 @@ def human_readable_answers(predictions):
     Turn predictions into Human readable answers
     """
     answers = []
-    class_names = ["0", "1", "2", "3", "4",
-                   "5", "6", "7", "8", "9"]
-    for i in range(1000):
+
+    for i in range(len(predictions)):
         argmax = np.argmax(predictions[i])
         answer = class_names[argmax]
         print(answer)
