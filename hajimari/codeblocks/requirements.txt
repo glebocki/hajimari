@@ -1,0 +1,4 @@
+fastapi~=0.65.0
+tensorflow~=2.5.0rc3
+numpy~=1.19.5
+uvicorn==0.13.4
