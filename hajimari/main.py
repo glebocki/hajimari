@@ -1,3 +1,4 @@
+import uvicorn
 from fastapi import FastAPI, Response, Request, File, Form, UploadFile
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -22,3 +23,7 @@ async def generate(service_name: str = Form(...),
                    ml_model: UploadFile = File(...)) -> Response:
     # TODO: validate that file has extension .h5
     return MicroServiceGenerator().generate(service_name, model_type, ml_model)
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=8000)
