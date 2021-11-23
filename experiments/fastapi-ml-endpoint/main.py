@@ -5,6 +5,7 @@ from fastapi.responses import Response
 from pydantic import BaseModel
 import matplotlib.pyplot as plt
 from numpy import ndarray
+import uvicorn
 
 import tensorflow as tf
 from tensorflow import keras
@@ -91,6 +92,9 @@ def human_readable_answers(predictions):
     for i in range(len(predictions)):
         argmax = np.argmax(predictions[i])
         answer = class_names[argmax]
-        print(answer)
         answers.append(answer)
     return answers
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=8080)
