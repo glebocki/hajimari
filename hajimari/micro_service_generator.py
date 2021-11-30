@@ -1,7 +1,8 @@
 import io
+import json
 import os
-import zipfile
 import shutil
+import zipfile
 from typing import List
 
 from fastapi import Response, UploadFile
@@ -32,6 +33,8 @@ def zip_files(file_names: List[str], zip_filename: str = "archive") -> Response:
 
 class MicroServiceGenerator:
 
+    codeblocks_path = 'codeblocks/'
+
     def __init__(self):
         return
 
@@ -39,18 +42,28 @@ class MicroServiceGenerator:
                  model_type: str,
                  model_file: UploadFile
                  ):
-        model_file_path: str = f'codeblocks/{model_file.filename}'
+        model_file_path: str = f'{self.codeblocks_path}{model_file.filename}'
 
         # save file locally
         with open(model_file_path, 'wb') as buffer:
             shutil.copyfileobj(model_file.file, buffer)
 
+        # add model to a config file
+        config = {
+            "model": {
+                "name": model_file.filename
+            }
+        }
+        with open(f'{self.codeblocks_path}/config.json', "w") as outfile:
+            json.dump(config, outfile, indent=4, sort_keys=True)
+
         # package files
         res: Response = zip_files([
             "run.sh",
-            "codeblocks/README.md",
-            "codeblocks/requirements.txt",
-            "codeblocks/main.py",
+            f'{self.codeblocks_path}README.md',
+            f'{self.codeblocks_path}requirements.txt',
+            f'{self.codeblocks_path}main.py',
+            f'{self.codeblocks_path}config.json',
             model_file_path
         ], slugify(service_name))
 

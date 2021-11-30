@@ -1,3 +1,4 @@
+import json
 from typing import List
 
 import numpy as np
@@ -12,10 +13,16 @@ app = FastAPI()
 class_names = ["0", "1", "2", "3", "4",
                "5", "6", "7", "8", "9"]
 
+model_file_name: str
+
+with open("config.json") as json_data_file:
+    data = json.load(json_data_file)
+    model_file_name = data["model"]["name"]
+
 # TODO: Load once - Singleton, research Dependency Injection in FastApi
 # Loading model H5
 try:
-    model: tf.keras.Model = keras.models.load_model("mnist_model.h5")
+    model: tf.keras.Model = keras.models.load_model(model_file_name)
 except OSError:
     print("Oops! Could not load Machine Learning model. Make sure it is in the same directory as the service.")
     raise
