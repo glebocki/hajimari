@@ -7,7 +7,7 @@ from numpy import ndarray
 def save_to_file():
     (train_images, train_labels), (test_images, test_labels) = tf.keras.datasets.mnist.load_data()
 
-    test_images = test_images[:2]  # take first
+    test_images = test_images[:10]  # take first
     # each image is a 2d 28 by 28 array of 0-255
     reshape = test_images.reshape(-1, 28 * 28)  # reshape from 2d to 1d array
 
