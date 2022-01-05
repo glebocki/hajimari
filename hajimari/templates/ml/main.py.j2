@@ -1,0 +1,42 @@
+import json
+from typing import List
+
+import numpy as np
+import tensorflow as tf
+import uvicorn
+from fastapi import FastAPI
+from numpy import ndarray
+from tensorflow import keras
+
+app = FastAPI()
+
+model_file_name: str
+
+with open("config.json") as json_data_file:
+    data = json.load(json_data_file)
+    model_file_name = data["model"]["name"]
+
+# TODO: Load once - Singleton, research Dependency Injection in FastApi
+# Loading model H5
+try:
+    model: tf.keras.Model = keras.models.load_model(model_file_name)
+except OSError:
+    print("Oops! Could not load Machine Learning model. Make sure it is in the same directory as the service.")
+    raise
+
+
+@app.post("/api/ml/predict")
+def ml_upload_img(payload: {{ payload }}):
+    predict_input = np.array(payload)
+
+    # PREDICT
+    predictions: ndarray = model.predict(predict_input)
+
+    predictions_list: list = predictions.tolist()
+    return {
+        "predictions": predictions_list
+    }
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=8080)
