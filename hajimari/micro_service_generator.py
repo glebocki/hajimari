@@ -5,15 +5,12 @@ import shutil
 import zipfile
 from typing import List
 
+import tensorflow as tf
 from fastapi import Response, UploadFile
-
 from fastapi.templating import Jinja2Templates
-
-from utils import slugify
-
 from tensorflow import keras
 
-import tensorflow as tf
+from utils import slugify
 
 templates = Jinja2Templates(directory="templates/ml")
 
@@ -40,7 +37,7 @@ def zip_files(file_names: List[str], zip_filename: str = "archive") -> Response:
 
 
 class MicroServiceGenerator:
-    codeblocks_path = 'codeblocks/'
+    CODEBLOCKS_PATH = 'codeblocks/'
 
     def __init__(self):
         return
@@ -50,13 +47,12 @@ class MicroServiceGenerator:
                  model_type: str,
                  model_file: UploadFile
                  ):
-        model_file_path: str = f'{self.codeblocks_path}{model_file.filename}'
+        model_file_path: str = f'{self.CODEBLOCKS_PATH}{model_file.filename}'
 
-        # save model file locally
-        with open(model_file_path, 'wb') as buffer:
-            shutil.copyfileobj(model_file.file, buffer)
+        # Save model file locally
+        self._save_model(model_file, model_file_path)
 
-        # add model to a config file
+        # Add model to config file
         config = {
             "model": {
                 "name": model_file.filename
@@ -64,42 +60,54 @@ class MicroServiceGenerator:
         }
         self._save_config(config)
 
-        model: tf.keras.Model = keras.models.load_model(model_file_path)
+        input_dimensions = self._get_model_input_dimensions(model_file_path)
+        input_payload = self._generate_payload_shape(input_dimensions, 'float')
+        self._render_and_save_main(input_payload)
 
-        model_config = model.get_config()
-        # this one is undocumented in TF KERAS!!!
-        batch_input_shape = model_config["layers"][0]["config"]["batch_input_shape"]
-
-        input_dimensions = len(batch_input_shape) - 1
-
-        # batch_input_shape
-        input_payload = "float"
-        # Generate payload dimensions. Example: List[List[float]]
-        for i in range(0, input_dimensions + 1):
-            input_payload = f'List[{input_payload}]'
-
-        # Working templating
-        tm = templates.get_template("main.py.j2")
-        main_rendered = tm.render({"payload": input_payload})
-
-        with open(f'{self.codeblocks_path}main.py', 'w') as text_file:
-            text_file.write(main_rendered)
-
-        # package files
+        # Package files for the response
         res: Response = zip_files([
             "run.sh",
-            f'{self.codeblocks_path}README.md',
-            f'{self.codeblocks_path}requirements.txt',
-            f'{self.codeblocks_path}main.py',
-            f'{self.codeblocks_path}config.json',
+            f'{self.CODEBLOCKS_PATH}README.md',
+            f'{self.CODEBLOCKS_PATH}requirements.txt',
+            f'{self.CODEBLOCKS_PATH}main.py',
+            f'{self.CODEBLOCKS_PATH}config.json',
             model_file_path
         ], slugify(service_name))
 
-        # clean up
+        # Clean up
         os.remove(model_file_path)
 
         return res
 
     def _save_config(self, config):
-        with open(f'{self.codeblocks_path}/config.json', "w") as outfile:
+        with open(f'{self.CODEBLOCKS_PATH}/config.json', "w") as outfile:
             json.dump(config, outfile, indent=4, sort_keys=True)
+
+    def _render_and_save_main(self, input_payload: str):
+        tm = templates.get_template("main.py.j2")
+        main_rendered = tm.render({"payload": input_payload})
+
+        with open(f'{self.CODEBLOCKS_PATH}main.py', 'w') as text_file:
+            text_file.write(main_rendered)
+
+    @staticmethod
+    def _generate_payload_shape(dimensions: int, base_type: str):
+        """Generate payload dimensions. Example: List[List[float]]."""
+        input_payload = base_type
+        for i in range(0, dimensions + 1):
+            input_payload = f'List[{input_payload}]'
+        return input_payload
+
+    @staticmethod
+    def _get_model_input_dimensions(model_file_path: str):
+        model: tf.keras.Model = keras.models.load_model(model_file_path)
+        model_config = model.get_config()
+        # This is undocumented in Tensorflow API
+        batch_input_shape = model_config["layers"][0]["config"]["batch_input_shape"]
+        input_dimensions = len(batch_input_shape) - 1
+        return input_dimensions
+
+    @staticmethod
+    def _save_model(model_file, model_file_path):
+        with open(model_file_path, 'wb') as buffer:
+            shutil.copyfileobj(model_file.file, buffer)
