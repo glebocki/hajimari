@@ -67,31 +67,24 @@ class MicroServiceGenerator:
 
         model: tf.keras.Model = keras.models.load_model(model_file_path)
 
-        modelConfig = model.get_config()
+        model_config = model.get_config()
         # this one is undocumented in TF KERAS!!!
-        batch_input_shape = modelConfig["layers"][0]["config"]["batch_input_shape"]
-        print(batch_input_shape)
-        print(type(batch_input_shape))
-        print(len(batch_input_shape))
+        batch_input_shape = model_config["layers"][0]["config"]["batch_input_shape"]
 
         input_dimensions = len(batch_input_shape) - 1
 
         # batch_input_shape
         input_payload = "float"
-        # List[List[float]]
+        # Generate payload dimensions. Example: List[List[float]]
         for i in range(0, input_dimensions + 1):
             input_payload = f'List[{input_payload}]'
 
-        print(input_payload)
-
         # Working templating
         tm = templates.get_template("main.py.j2")
-        msg = tm.render({"payload": input_payload})
-        print(msg)
+        main_rendered = tm.render({"payload": input_payload})
 
-        # TODO: save rendered template and package it
         with open(f'{self.codeblocks_path}main.py', 'w') as text_file:
-            text_file.write(msg)
+            text_file.write(main_rendered)
 
         # package files
         res: Response = zip_files([
