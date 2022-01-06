@@ -62,8 +62,7 @@ class MicroServiceGenerator:
                 "name": model_file.filename
             }
         }
-        with open(f'{self.codeblocks_path}/config.json', "w") as outfile:
-            json.dump(config, outfile, indent=4, sort_keys=True)
+        self._save_config(config)
 
         model: tf.keras.Model = keras.models.load_model(model_file_path)
 
@@ -100,3 +99,7 @@ class MicroServiceGenerator:
         os.remove(model_file_path)
 
         return res
+
+    def _save_config(self, config):
+        with open(f'{self.codeblocks_path}/config.json', "w") as outfile:
+            json.dump(config, outfile, indent=4, sort_keys=True)
