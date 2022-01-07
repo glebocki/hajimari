@@ -7,9 +7,9 @@ Configurable environment for API deployment for machine learning models.
 
 ## Run it:
 
-### Running with Pipenv
+### Running with [Pipenv](https://pipenv.pypa.io/en/latest/)
 
-First install `pipenv`.
+First create a virtual environment and install dependencies with `pipenv`.
 
 ```shell
 pipenv install -r requirements.txt
