@@ -23,7 +23,7 @@ def save_to_file():
 
     test_images_list = test_images.tolist()
 
-    with open('../../fastapi-ml-endpoint/data.json', 'w') as f:
+    with open('data.json', 'w') as f:
         json.dump(test_images_list, f)
 
 
