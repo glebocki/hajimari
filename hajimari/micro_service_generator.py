@@ -42,11 +42,7 @@ class MicroServiceGenerator:
     def __init__(self):
         return
 
-    def generate(self,
-                 service_name: str,
-                 model_type: str,
-                 model_file: UploadFile
-                 ):
+    def generate(self, service_name: str, model_file: UploadFile):
         model_file_path: str = f'{self.CODEBLOCKS_PATH}{model_file.filename}'
 
         # Save model file locally
