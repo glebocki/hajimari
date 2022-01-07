@@ -66,7 +66,6 @@ class MicroServiceGenerator:
 
         # Package files for the response
         res: Response = zip_files([
-            "run.sh",
             f'{self.CODEBLOCKS_PATH}README.md',
             f'{self.CODEBLOCKS_PATH}requirements.txt',
             f'{self.CODEBLOCKS_PATH}main.py',
