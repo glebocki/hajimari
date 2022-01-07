@@ -15,7 +15,7 @@
     <div class="form">
         <form action="./generate" method="post" enctype="multipart/form-data">
         <label for="service_name">Service Name:</label>
-        <input type="text" id="service_name" name="service_name" value="demo_ml_service">
+        <input type="text" id="service_name" name="service_name" value="demo_ml_service" required>
         <br>
         <label for="model_type">Model type:</label>
         <select name="model_type" id="model_type">
@@ -23,7 +23,7 @@
         </select>
         <br>
         <label for="ml_model">ML model (*.h5):</label>
-        <input type="file" id="ml_model" name="ml_model" accept=".h5">
+        <input type="file" id="ml_model" name="ml_model" accept=".h5" required>
         <br>
         <br>
         <input type="submit" value="Generate">

@@ -1,5 +1,7 @@
+import os
+
 import uvicorn
-from fastapi import FastAPI, Response, Request, File, Form, UploadFile
+from fastapi import FastAPI, Response, Request, File, Form, UploadFile, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -21,7 +23,13 @@ def index(request: Request):
 async def generate(service_name: str = Form(...),
                    model_type: str = Form(...),
                    ml_model: UploadFile = File(...)) -> Response:
-    # TODO: validate that file has extension .h5
+    if not service_name:
+        raise HTTPException(400, detail="Parameter service name must not be empty")
+
+    extension = os.path.splitext(ml_model.filename)[1]
+    if extension != ".h5" or ml_model.content_type != "application/octet-stream":
+        raise HTTPException(400, detail="Invalid file type")
+
     return MicroServiceGenerator().generate(service_name, model_type, ml_model)
 
 
