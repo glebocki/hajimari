@@ -50,4 +50,4 @@ print(y_test,'   ',y_pred.reshape(1,-1))
 
 print(r2_score(y_test,y_pred))
 
-model.save("marketing-budget-ml.h5")
+model.save("marketing-budget-model.h5")
