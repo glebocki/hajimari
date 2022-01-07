@@ -49,3 +49,5 @@ print('Actual Values\tPredicted Values')
 print(y_test,'   ',y_pred.reshape(1,-1))
 
 print(r2_score(y_test,y_pred))
+
+model.save("marketing-budget-ml.h5")
