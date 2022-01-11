@@ -28,7 +28,7 @@ except OSError:
 
 
 @app.post("/api/ml/predict")
-def ml_upload_img(payload: {{ payload }}):
+def predict(payload: {{ payload }}):
     predict_input = np.array(payload)
 
     # PREDICT
